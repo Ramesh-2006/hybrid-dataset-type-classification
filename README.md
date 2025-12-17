@@ -191,17 +191,7 @@ This repository adheres to **open science and reproducible research best practic
 ├── README.md
 ```
 
----
-
-## 8. Citation
-
-If you use this work, please cite:
-
-> Ramesh M., *Hybrid Dataset-Type Classification Using Ensemble Learning and Large Language Models*, 2025.
-
----
-
-## 9. Contact
+## 8. Contact
 
 For questions or collaboration:
 
