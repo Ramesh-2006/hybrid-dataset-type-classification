@@ -10,7 +10,7 @@ This project addresses the problem of **automatic dataset-type classification** 
 
 The objective is to accurately classify datasets (e.g., healthcare, finance, education, ecommerce, etc.) **purely from metadata**, without inspecting raw data values.
 
-This work is positioned as an **applied data science framework** with emphasis on reproducibility, transparency, and experimental validation.
+This work is positioned as an **applied data science framework** with strong emphasis on **reproducibility, transparency, and experimental validation**, aligning with modern open-science expectations.
 
 ---
 
@@ -18,34 +18,43 @@ This work is positioned as an **applied data science framework** with emphasis o
 
 ### 2.1 Dataset Description
 
-The experiments use a **publicly shareable, metadata-only dataset** constructed from multiple open datasets. Each dataset is represented by:
+The experiments use a **publicly shareable, metadata-only dataset** constructed from multiple open-access datasets. Each dataset instance is represented by:
 
-* Column names
-* Dataset type label
+* A consolidated text of column names
+* A dataset-type label
 
-**File:** `dataset_type_training_data.csv`
+**File:** `data/dataset_type_training_data.csv`
+
+---
 
 ### 2.2 Dataset Schema
 
 | Column Name  | Description                           |
 | ------------ | ------------------------------------- |
-| column_name  | Name of a column in the dataset       |
+| column_text  | Space-separated list of column names  |
 | dataset_type | Ground-truth dataset category (label) |
+
+---
 
 ### 2.3 Dataset Statistics
 
-* Total dataset types: *N*
-* Total datasets: *M*
-* Total metadata rows: *K*
+* Total dataset types: **15**
+* Total metadata rows: *auto-derived from CSV*
 
-*(Exact numbers should be updated based on the CSV file)*
+Dataset statistics can be reproduced using:
+
+```bash
+python -c "import pandas as pd; df=pd.read_csv('data/dataset_type_training_data.csv'); print('Classes:', df['dataset_type'].nunique()); print('Samples:', len(df))"
+```
+
+---
 
 ### 2.4 Data Source and License
 
-* Data collected from **open-access datasets** (e.g., Kaggle, UCI ML Repository, OpenML)
-* Only metadata is used
-* No personal or sensitive data included
-* Suitable for academic research and reproducibility
+* Metadata collected from **open-access datasets** (Kaggle, UCI ML Repository, OpenML)
+* Only column names are used; no raw values are accessed
+* No personal, private, or sensitive data involved
+* Fully suitable for academic research and redistribution
 
 ---
 
@@ -53,24 +62,24 @@ The experiments use a **publicly shareable, metadata-only dataset** constructed 
 
 ### 3.1 Hybrid Architecture
 
-The system consists of three layers:
+The proposed system follows a **three-stage hybrid decision pipeline**:
 
-1. **Statistical Layer**
+1. **Statistical Learning Layer**
 
-   * Column names are vectorized
-   * Random Forest classifier trained on metadata
+   * Column metadata vectorized using a learned representation
+   * Random Forest classifier produces probabilistic predictions
 
 2. **Fuzzy Matching Layer**
 
-   * Levenshtein-based similarity matching
-   * Captures lexical overlaps between domains
+   * Lexical similarity computed using Levenshtein-distance–based matching
+   * Improves robustness for overlapping or sparse metadata
 
 3. **LLM Reasoning Layer**
 
-   * Semantic interpretation of column sets
-   * Resolves ambiguous or overlapping cases
+   * Semantic interpretation of column-name sets
+   * Invoked only when confidence from earlier stages is insufficient
 
-The final prediction is obtained through **confidence-weighted aggregation**.
+Final predictions are obtained through **confidence-aware aggregation**, ensuring efficiency while preserving accuracy.
 
 ---
 
@@ -78,13 +87,13 @@ The final prediction is obtained through **confidence-weighted aggregation**.
 
 ### 4.1 Baseline Models
 
-* Random Forest only
+* Random Forest (RF) only
 * Fuzzy matching only
-* LLM-only reasoning
+* LLM-only semantic classification
 
 ### 4.2 Proposed Hybrid Model
 
-* Ensemble of all three components
+* Integrated ensemble of RF + Fuzzy + LLM reasoning
 
 ### 4.3 Evaluation Metrics
 
@@ -93,15 +102,18 @@ The final prediction is obtained through **confidence-weighted aggregation**.
 * Recall
 * F1-score
 
-Results are saved in:
+Evaluation outputs are stored in:
 
 ```
-hybrid_model_test_results.csv
+results/hybrid_model_test_results.csv
 ```
 
 ---
 
 ## 5. How to Run the Code
+
+> **Validated Environment:** Python 3.10
+> All dependencies are explicitly listed in `requirements.txt` for reproducibility.
 
 ### 5.1 Environment Setup
 
@@ -111,33 +123,58 @@ source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+---
+
 ### 5.2 Run Experiments
 
 ```bash
-python run_experiments.py
+python experiments/run_experiments.py
 ```
 
-This will:
+This command will:
 
-* Load the dataset
-* Train the model from scratch
-* Evaluate performance
-* Save results
+* Load metadata-only dataset
+* Train the hybrid model from scratch
+* Evaluate all baselines and the proposed method
+* Save metrics and predictions
 
-### 5.3 Exporting API key
+---
+
+### 5.3 Exporting API Key (Required)
+
+⚠️ **Do NOT hard-code API keys.**
+
+Set the Groq API key as an environment variable:
+
+**Linux / macOS**
+
+```bash
+export GROQ_API_KEY=your_api_key_here
 ```
-export GROQ_API_KEY=your_key_here
+
+**Windows (PowerShell)**
+
+```powershell
+setx GROQ_API_KEY "your_api_key_here"
+```
+
+The application securely accesses the key using:
+
+```python
+os.getenv("GROQ_API_KEY")
+```
+
 ---
 
 ## 6. Reproducibility Checklist
 
+* Public, metadata-only datasets
+* Deterministic preprocessing pipeline
 * Fixed random seeds
-* Public dataset metadata
-* Deterministic preprocessing
-* Single-command execution
-* All parameters explicitly defined
+* Explicit dependency versions
+* Single-command experiment execution
 
-This repository follows **open science and reproducible research principles**.
+This repository adheres to **open science and reproducible research best practices**.
 
 ---
 
@@ -168,5 +205,5 @@ If you use this work, please cite:
 
 For questions or collaboration:
 
-* Author: Ramesh M.
-* Email: [ramesh.m.j.2006@gmail.com](mailto:ramesh.m.j.2006@gmail.com)
+* **Author:** Ramesh M.
+* **Email:** ramesh.m.j.2006@gmail
