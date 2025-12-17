@@ -1,6 +1,5 @@
 # test_your_hybrid_model_on_real_data.py
 # This script uses YOUR trained model + YOUR dataset → gives REAL accuracy
-%pip install groq
 import pandas as pd
 import numpy as np
 import joblib
