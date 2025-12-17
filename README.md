@@ -124,6 +124,9 @@ This will:
 * Evaluate performance
 * Save results
 
+### 5.3 Exporting API key
+```
+export GROQ_API_KEY=your_key_here
 ---
 
 ## 6. Reproducibility Checklist
