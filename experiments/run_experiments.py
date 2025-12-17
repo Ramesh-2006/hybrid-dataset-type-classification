@@ -11,7 +11,7 @@ import os
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
 # ========================= CONFIG =========================
-GROQ_API_KEY = "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"  # https://console.groq.com/keys
+GROQ_API_KEY = os.getenv(GROQ_API_KEY)
 
 # Your trained files (you already have these!)
 VECTORIZER = joblib.load("hybrid_column_vectorizer_groq.pkl")
